@@ -1,11 +1,8 @@
 name: Build EKS cluster plugin
 
 on:
-  workflow_dispatch:
-    inputs:
-      target:
-        description: 'Commit hash or branch to release (optional, defaults to master)'
-        required: false
+  schedule:
+    - cron: "0 0 * * *"
 
 jobs:
   build-and-release:
@@ -14,11 +11,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-      with:
-        ref: ${{ inputs.target || 'master' }}
-
-    - name: Check for make
-      run: make --version
 
     - name: Run Makefile
       run: make plugin
@@ -26,5 +18,6 @@ jobs:
     - name: Publish to artifact
       uses: actions/upload-artifact@v4
       with:
-        name: my-artifact
+        name: dss-plugin-eks-clusters
         path: dist/*.zip
+        retention-days: 2
