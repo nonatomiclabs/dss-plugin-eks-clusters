@@ -23,24 +23,8 @@ jobs:
         path: dist/*.zip
         retention-days: 2
 
-    - name: Create GitHub Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Release
+      uses: softprops/action-gh-release@v2
       with:
-        release_name: "vnext"
-        target_commitish: master
-        body: |
-          This is a pre-release for the next version of the DSS EKS plugin.
-        draft: true
         prerelease: true
-        generate_release_notes: false
-
-    - name: Upload Release Assets
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: dist/*.zip"
+        files: dist/*.zip
